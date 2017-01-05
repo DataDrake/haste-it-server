@@ -31,6 +31,8 @@ setup:
     @$(call task,Setting up symlinks...)
     @if [ ! -d $(PROJROOT)/haste-it-server ]; then ln -s $(shell pwd) $(PROJROOT)/haste-it-server; fi
     @$(call task,Getting dependencies...)
+    @go get github.com/buaazp/fasthttprouter
+    @go get github.com/valyala/fasthttp
     @go get github.com/DataDrake/waterlog
     @$(call pass,SETUP)
 

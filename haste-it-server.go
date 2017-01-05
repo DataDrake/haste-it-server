@@ -19,26 +19,23 @@ package main
 
 import (
 	"flag"
-	"net/http"
+	"github.com/buaazp/fasthttprouter"
+	"github.com/valyala/fasthttp"
 )
 
-func httpRedirect(w http.ResponseWriter, req *http.Request) {
-	http.Redirect(w, req,
-	"https://" + req.Host + req.URL.String(),
-	http.StatusMovedPermanently)
+func httpRedirect(ctx *fasthttp.RequestCtx) {
+	ctx.Redirect(
+	"https://" + string(ctx.Request.Host()) + string(ctx.Request.RequestURI()),
+	fasthttp.StatusMovedPermanently)
 }
 
-func index(w http.ResponseWriter, req *http.Request) {
-	if req.URL.Path != "/" {
-		http.NotFound(w, req)
-		return
-	}
-	w.Write([]byte("Hello World"))
+func index(ctx *fasthttp.RequestCtx) {
+	ctx.SetBody([]byte("Hello World"))
 }
 
-func newMux() *http.ServeMux {
-	s := http.NewServeMux()
-	s.HandleFunc("/",index)
+func newRouter() *fasthttprouter.Router {
+	s := fasthttprouter.New()
+	s.GET("/",index)
 	return s
 }
 
@@ -56,8 +53,8 @@ func main() {
 		usage()
 		return
 	}
-	go http.ListenAndServe(":80", http.HandlerFunc(httpRedirect))
-	err := http.ListenAndServeTLS(":443", "./server.crt", "./server.key", newMux())
+	go fasthttp.ListenAndServe(":80", httpRedirect)
+	err := fasthttp.ListenAndServeTLS(":443", "./server.crt", "./server.key", newRouter().Handler)
 	if err != nil {
 		panic(err.Error())
 	}
