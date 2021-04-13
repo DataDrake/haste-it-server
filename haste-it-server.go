@@ -1,5 +1,5 @@
 //
-// Copyright 2017 Bryan T. Meyers <bmeyers@datadrake.com>
+// Copyright 2017-2021 Bryan T. Meyers <root@datadrake.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 // limitations under the License.
 //
 
-
 package main
 
 import (
@@ -25,8 +24,8 @@ import (
 
 func httpRedirect(ctx *fasthttp.RequestCtx) {
 	ctx.Redirect(
-	"https://" + string(ctx.Request.Host()) + string(ctx.Request.RequestURI()),
-	fasthttp.StatusMovedPermanently)
+		"https://"+string(ctx.Request.Host())+string(ctx.Request.RequestURI()),
+		fasthttp.StatusMovedPermanently)
 }
 
 func index(ctx *fasthttp.RequestCtx) {
@@ -35,7 +34,7 @@ func index(ctx *fasthttp.RequestCtx) {
 
 func newRouter() *fasthttprouter.Router {
 	s := fasthttprouter.New()
-	s.GET("/",index)
+	s.GET("/", index)
 	return s
 }
 
@@ -46,8 +45,8 @@ func usage() {
 
 func main() {
 	flag.Usage = usage
-	var h1 = flag.Bool("-help",false,"Print help")
-	var h2 = flag.Bool("h",false,"Same as --help")
+	var h1 = flag.Bool("-help", false, "Print help")
+	var h2 = flag.Bool("h", false, "Same as --help")
 	flag.Parse()
 	if *h1 || *h2 {
 		usage()
@@ -59,6 +58,3 @@ func main() {
 		panic(err.Error())
 	}
 }
-
-
-
