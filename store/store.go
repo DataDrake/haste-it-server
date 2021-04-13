@@ -58,7 +58,19 @@ func (s *Store) Get(key Key) (data []byte, ok bool) {
 		return
 	}
 	data, ok = curr[key]
+	go s.Access(key)
 	return
+}
+
+func (s *Store) Access(key Key) {
+	s.write.Lock()
+	defer s.write.Unlock()
+	for i, entry := range s.meta {
+		if entry.key.val == key.val {
+			s.meta[i] = entry.Access()
+			return
+		}
+	}
 }
 
 func (s *Store) Put(data []byte, extension string) (key Key, err error) {
