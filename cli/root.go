@@ -14,12 +14,15 @@
 // limitations under the License.
 //
 
-package main
+package cli
 
 import (
-	"github.com/DataDrake/haste-it-server/cli"
+	"github.com/DataDrake/cli-ng/v2/cmd"
 )
 
-func main() {
-	cli.Root.Run()
+var Root = cmd.Root{
+	Name:      "haste-it-server",
+	Short:     "A small in-memory hastebin clone",
+	Version:   "0.1.0",
+	Copyright: "© 2017-2021 Bryan T. Meyers <root@datadrake.com>",
 }

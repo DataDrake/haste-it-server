@@ -17,6 +17,7 @@
 package store
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 	"sync/atomic"
@@ -33,23 +34,25 @@ type Store struct {
 	last  Key
 }
 
-func NewStore(min, max, worst int) *Store {
+var Default *Store
+
+func Setup(min, max, worst int) error {
 	if min < 0 {
-		panic("min must be positive")
+		return errors.New("min must be positive")
 	}
 	if max < min {
-		panic("max cannot be less than min")
+		return errors.New("max cannot be less than min")
 	}
 	if max > worst {
-		panic("max must not exceed worst")
+		return errors.New("max must not exceed worst")
 	}
-	s := &Store{
+	Default = &Store{
 		min:   min,
 		max:   max,
 		worst: worst,
 	}
-	s.data.Store(make(EntryMap))
-	return s
+	Default.data.Store(make(EntryMap))
+	return nil
 }
 
 func (s *Store) Get(key Key) (data []byte, ok bool) {
