@@ -1,6 +1,7 @@
 haste-it-server
 .idea/*
-server*
+server.key
+server.crt
 build/
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
