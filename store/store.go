@@ -115,3 +115,22 @@ func (s *Store) prune() (key Key, ok bool) {
 	ok = true
 	return
 }
+
+func (s *Store) Stats() (stats Metrics) {
+	s.write.Lock()
+	defer s.write.Unlock()
+	stats.Min = s.max
+	for _, entry := range s.meta {
+		if entry.size > stats.Max {
+			stats.Max = entry.size
+		}
+		if entry.size < stats.Min {
+			stats.Min = entry.size
+		}
+		stats.Total += entry.size
+	}
+	if l := len(s.meta); l != 0 {
+		stats.Average = float64(stats.Total) / float64(l)
+	}
+	return
+}
